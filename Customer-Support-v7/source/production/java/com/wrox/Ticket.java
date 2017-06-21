@@ -1,6 +1,6 @@
 package com.wrox;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -13,11 +13,31 @@ public class Ticket
 
     private String body;
 
-    private Instant dateCreated;
+    private Date dateCreated;
+    
+    private Date dateClosed;
 
     private Map<String, Attachment> attachments = new LinkedHashMap<>();
     
     private int UserID;
+    
+    private int RefID;
+    
+    public Date getDateClosed(){
+    	return dateClosed;
+    }
+    
+    public void setDateClosed(Date newDateClosed){
+    	dateClosed = newDateClosed;
+    }
+    
+    public int getRefID(){
+    	return RefID;
+    }
+    
+    public void setRefID(int newRefID){
+    	RefID=newRefID;
+    }
     
     public int getUserID(){
     	return UserID;
@@ -57,12 +77,12 @@ public class Ticket
         this.body = body;
     }
 
-    public Instant getDateCreated()
+    public Date getDateCreated()
     {
         return dateCreated;
     }
 
-    public void setDateCreated(Instant dateCreated)
+    public void setDateCreated(Date dateCreated)
     {
         this.dateCreated = dateCreated;
     }

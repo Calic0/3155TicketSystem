@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Date;
 
 @WebServlet(
         name = "ticketServlet",
@@ -29,7 +30,7 @@ public class TicketServlet extends HttpServlet
 {
     private volatile int TICKET_ID_SEQUENCE = 1;
     
-    DBManager dbmanaged = new DBManager();
+    private DBManager dbmanaged = new DBManager();
 
     private Map<Integer, Ticket> ticketDatabase = dbmanaged.pullAllTickets();
 
@@ -152,7 +153,8 @@ public class TicketServlet extends HttpServlet
         );
         ticket.setSubject(request.getParameter("subject"));
         ticket.setBody(request.getParameter("body"));
-        ticket.setDateCreated(Instant.now());
+        Date curDate = new Date();
+        ticket.setDateCreated(curDate);
 
         Part filePart = request.getPart("file1");
         if(filePart != null && filePart.getSize() > 0)
@@ -161,13 +163,15 @@ public class TicketServlet extends HttpServlet
             if(attachment != null)
                 ticket.addAttachment(attachment);
         }
-
+        
         int id;
         synchronized(this)
         {
             id = this.TICKET_ID_SEQUENCE++;
             this.ticketDatabase.put(id, ticket);
         }
+        
+        dbmanaged.insert(ticket);
 
         response.sendRedirect("tickets?action=view&ticketId=" + id);
     }
