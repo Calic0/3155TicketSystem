@@ -54,7 +54,7 @@ public class DBManager {
 		return returnThis;
 		}
 	
-	public static int delete(Ticket ticket) {
+	public static int delete(int refID) {
         Connection connection = myConn;
         PreparedStatement ps = null;
 
@@ -62,7 +62,7 @@ public class DBManager {
                 + "WHERE RefID = ?";
         try {
             ps = connection.prepareStatement(query);
-            ps.setInt(1, ticket.getRefID());
+            ps.setInt(1, refID);
             
             return ps.executeUpdate();  
         } catch (SQLException e) {
