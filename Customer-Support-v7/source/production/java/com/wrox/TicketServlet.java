@@ -49,6 +49,9 @@ public class TicketServlet extends HttpServlet
             case "view":
                 this.viewTicket(request, response);
                 break;
+            case "delete":
+                this.deleteTicket(request, response);
+                break;
             case "download":
                 this.downloadAttachment(request, response);
                 break;
@@ -131,6 +134,13 @@ public class TicketServlet extends HttpServlet
 
         ServletOutputStream stream = response.getOutputStream();
         stream.write(attachment.getContents());
+    }
+    
+    private void deleteTicket(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int refID = response.getParameter("refID");
+        this.ticketDatabase.remove(refID);
+        DBManager.delete(refID);
     }
 
     private void listTickets(HttpServletRequest request,
