@@ -1,14 +1,12 @@
 package com.wrox;
 
-
 import java.sql.*;
 import java.util.*;
 
 public class DBManager {
 	private Connection myConn;
 	private Statement myStat;
-
-	protected int nextRef;
+	private int nextRef;
 	
 	public DBManager(){
 		try{
@@ -61,32 +59,10 @@ public class DBManager {
 		return returnThis;
 		}
 	
-
-	public int delete(int refID) {
-
-        Connection connection = myConn;
-        PreparedStatement ps = null;
-
-        String query = "DELETE FROM tickettable "
-                + "WHERE RefID = ?";
-        try {
-            ps = connection.prepareStatement(query);
-            ps.setInt(1, refID);
-            
-            return ps.executeUpdate();  
-        } catch (SQLException e) {
-            System.out.println(e);
-            return 0;
-        } finally {
-            DBUtil.closePreparedStatement(ps);
-
-
-        }
-    }
-	
 	public void insert(Ticket ticket) {
         Connection connection = myConn;
         PreparedStatement ps = null;
+        Random rando = new Random();
         String query
                 = "INSERT INTO tickettable (RefID, UserID, Subject1, Body, Date_Opened) " //Date closed was removed temporarily
                 + "VALUES (?, ?, ?, ?, ?)";
@@ -130,9 +106,7 @@ public class DBManager {
 			ps.setString(3, pass);
 			ps.setString(4, First);
 			ps.setString(5, Last);
-
-			java.util.Date utilDate = new java.util.Date();
-			java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+			java.sql.Date sqlDate = new Java.sql.Date(utilDate.getTime());
 			ps.setDate(6, sqlDate);
 			ps.setDate(7, sqlDate);
 			ps.executeUpdate();

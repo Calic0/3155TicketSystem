@@ -1,4 +1,6 @@
+
 package com.wrox;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
-
 
 @WebServlet(
         name = "CreateAccountServlet",
