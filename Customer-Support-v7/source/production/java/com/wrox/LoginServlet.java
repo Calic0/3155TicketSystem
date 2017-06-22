@@ -30,6 +30,11 @@ public class LoginServlet extends HttpServlet
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
+    	String action = request.getParameter("action");
+    	if(action != null && action.equals("newAccount")){
+    		request.getRequestDispatcher("/WEB-INF/jsp/view/CreatAccount.jsp")
+            .forward(request, response);
+    	}else{
         HttpSession session = request.getSession();
         if(request.getParameter("logout") != null)
         {
@@ -47,7 +52,7 @@ public class LoginServlet extends HttpServlet
         request.getRequestDispatcher("/WEB-INF/jsp/view/login.jsp")
                .forward(request, response);
     }
-
+    }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
