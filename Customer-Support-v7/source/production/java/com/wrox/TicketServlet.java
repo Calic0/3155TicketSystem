@@ -28,11 +28,12 @@ import java.util.Date;
 )
 public class TicketServlet extends HttpServlet
 {
-    private volatile int TICKET_ID_SEQUENCE = 1;
     
     private DBManager dbmanaged = new DBManager();
 
     private Map<Integer, Ticket> ticketDatabase = dbmanaged.pullAllTickets();
+    
+    private volatile int TICKET_ID_SEQUENCE = dbmanaged.nextRef; //This is 0 until pullAllTickets runs, DO NOT PLACE ABOVE pullAllTickets();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -177,7 +178,8 @@ public class TicketServlet extends HttpServlet
         int id;
         synchronized(this)
         {
-            id = this.TICKET_ID_SEQUENCE++;
+            id = this.TICKET_ID_SEQUENCE++;\
+            ticket.setRefID(id);
             this.ticketDatabase.put(id, ticket);
         }
         
