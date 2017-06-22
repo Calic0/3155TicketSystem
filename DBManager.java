@@ -59,26 +59,6 @@ public class DBManager {
 		return returnThis;
 		}
 	
-	public static int delete(int refID) {
-        Connection connection = myConn;
-        PreparedStatement ps = null;
-
-        String query = "DELETE FROM tickettable "
-                + "WHERE RefID = ?";
-        try {
-            ps = connection.prepareStatement(query);
-            ps.setInt(1, refID);
-            
-            return ps.executeUpdate();  
-        } catch (SQLException e) {
-            System.out.println(e);
-            return 0;
-        } finally {
-            DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
-        }
-    }
-	
 	public void insert(Ticket ticket) {
         Connection connection = myConn;
         PreparedStatement ps = null;
