@@ -5,11 +5,19 @@
         <b>The username and password you entered are not correct. Please try
             again.</b><br /><br />
     </c:if>
+    
     <form method="POST" action="<c:url value="/login" />">
         Username<br />
         <input type="text" name="username" /><br /><br />
         Password<br />
         <input type="password" name="password" /><br /><br />
         <input type="submit" value="Log In" />
+		
+
     </form>
+    <form Method = "get" action="<c:url value="/login" />">
+    <input type="submit" value="Create a new account" />
+     <input type="hidden" name="action" value = "newAccount" />
+    </form>
+
 </template:loggedOut>

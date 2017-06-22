@@ -1,17 +1,19 @@
 package com.wrox;
 
+
 import java.sql.*;
 import java.util.*;
 
 public class DBManager {
 	private Connection myConn;
 	private Statement myStat;
+	protected int nextRef;
 	
 	public DBManager(){
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
 			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/ticket", "ITAdmin", "ticketDB");
-			
+			nextRef = 0;
 			myStat = myConn.createStatement();
 		}
 		catch(Exception exc){
@@ -42,9 +44,12 @@ public class DBManager {
 			tempattach.setName("placeholder");
 			tempattach.setContents(myRs.getBytes("Attachment"));
 			temp.addAttachment(tempattach);
+			int tempInt = myRs.getInt("RefID");
 			
-			
-			returnThis.put(myRs.getInt("RefID"), temp);
+			if(tempInt > nextRef){
+				nextRef = tempInt;
+			}
+			returnThis.put(tempInt, temp);
 			}
 		//End of Try
 		}
@@ -54,17 +59,35 @@ public class DBManager {
 		return returnThis;
 		}
 	
+	public int delete(int refID) {
+        Connection connection = myConn;
+        PreparedStatement ps = null;
+
+        String query = "DELETE FROM tickettable "
+                + "WHERE RefID = ?";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setInt(1, refID);
+            
+            return ps.executeUpdate();  
+        } catch (SQLException e) {
+            System.out.println(e);
+            return 0;
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+        }
+    }
+	
 	public void insert(Ticket ticket) {
         Connection connection = myConn;
         PreparedStatement ps = null;
-        Random rando = new Random();
         String query
                 = "INSERT INTO tickettable (RefID, UserID, Subject1, Body, Date_Opened) " //Date closed was removed temporarily
                 + "VALUES (?, ?, ?, ?, ?)";
         try {
             ps = connection.prepareStatement(query);
             ps.setString(4, ticket.getBody());
-            ps.setInt(2, rando.nextInt(9000000));
+            ps.setInt(1, ticket.getRefID());
             java.sql.Date sqlDate = null;
             if(ticket.getDateCreated()!=null){
             	sqlDate = new java.sql.Date(ticket.getDateCreated().getTime());
@@ -75,7 +98,7 @@ public class DBManager {
             }
             ps.setDate(5, sqlDate); //Instance vs Date issue
             ps.setString(3, ticket.getSubject());	
-            ps.setInt(1, rando.nextInt(9000000));
+            ps.setInt(2, 2);
             //ps.setDate(6, sqlDateClosed);
             //Again figure out attachment issue
             ps.executeUpdate();
@@ -86,7 +109,8 @@ public class DBManager {
         }
     }
 	
-	public void createUser(int UserID, String Username, String pass, String First, String Last, java.sql.Date Date_Created, java.sql.Date Last_Session){
+	
+	public void createUser(int UserID, String Username, String pass, String First, String Last){
 		PreparedStatement ps = null;
 		
 		String query
@@ -100,8 +124,10 @@ public class DBManager {
 			ps.setString(3, pass);
 			ps.setString(4, First);
 			ps.setString(5, Last);
-			ps.setDate(6, Date_Created);
-			ps.setDate(7, Last_Session);
+			java.util.Date utilDate = new java.util.Date();
+			java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+			ps.setDate(6, sqlDate);
+			ps.setDate(7, sqlDate);
 			ps.executeUpdate();
 		} catch (SQLException e){
 			System.out.println(e);			

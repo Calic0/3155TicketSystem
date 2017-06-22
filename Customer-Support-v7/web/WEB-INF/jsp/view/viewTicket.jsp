@@ -6,6 +6,7 @@
     Created <wrox:formatDate value="${ticket.dateCreated}" type="both"
                              timeStyle="long" dateStyle="full" /></i><br /><br />
     <c:out value="${ticket.body}" /><br /><br />
+6
     <c:if test="${ticket.numberOfAttachments > 0}">
         Attachments:
         <c:forEach items="${ticket.attachments}" var="attachment"
